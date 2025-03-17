@@ -1,0 +1,11 @@
+[package]
+name = "taskwarrrior-hooks"
+version = "0.1.0"
+edition = "2024"
+
+keywords = ["taskwarrior", "todo"]
+categories = ["command-line-utilities"]
+license = "GPL-3.0"
+
+[dependencies]
+rusqlite = "0.34.0"
