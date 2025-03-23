@@ -24,7 +24,7 @@ fn main() {
     for (query, file_str) in queries {
         match count_task_instances(&conn, query) {
             Ok(count) => write_count(count, &file_str),
-            Err(e) => println!("Skipping count hook: Query error in {query:?} - {e:?}"),
+            Err(e) => println!("Skipping count hook: Query error in {db:?}: {query:?} - {e:?}"),
         };
     }
 }
