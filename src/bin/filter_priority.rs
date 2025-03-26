@@ -30,6 +30,7 @@ fn parse_priority(task: &str, db: &str) -> String {
     return match priority.map(String::as_str) {
         Some("T") => {
             if count_priority_t(db).unwrap() >= 3 {
+                println!("Already at max priority:T tasks, reducing to priority:H");
                 parsed_task.set_priority(Some("H"));
             }
             return to_string(&parsed_task).unwrap();
@@ -46,6 +47,6 @@ fn count_priority_t(db: &str) -> Result<i32, Error> {
             std::process::exit(0)
         }
     };
-    let result: i32 = conn.query_row("SELECT COUNT() FROM tasks WHERE (data LIKE '%\"status\":\"pending\"%' OR data LIKE '%\"status\":\"recurring\"%') AND data NOT LIKE '%\"wait\":%' AND data LIKE %\"priority\":\"T\"%", [], |row| row.get(0))?;
+    let result: i32 = conn.query_row("SELECT COUNT() FROM tasks WHERE (data LIKE '%\"status\":\"pending\"%' OR data LIKE '%\"status\":\"recurring\"%') AND data NOT LIKE '%\"wait\":%' AND data LIKE '%\"priority\":\"T\"%'", [], |row| row.get(0))?;
     Ok(result)
 }
