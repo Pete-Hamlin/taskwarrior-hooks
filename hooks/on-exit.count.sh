@@ -1,4 +1,4 @@
 #!/bin/bash
 
 data=$5
-filter_count "${data/data:/}"
+hook_filter_count "${data/data:/}"

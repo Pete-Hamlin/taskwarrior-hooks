@@ -1,4 +1,4 @@
 #!/bin/bash
 
 data=$5
-filter_priority "${data/data:/}"
+hook_filter_priority "${data/data:/}"
