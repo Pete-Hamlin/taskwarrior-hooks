@@ -53,3 +53,64 @@ fn write_count(count: i32, file_str: &str) {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rusqlite::Connection;
+    use std::fs;
+
+    fn get_test_db_connection() -> Connection {
+        let conn = Connection::open_in_memory().unwrap();
+        conn.execute("CREATE TABLE tasks (data TEXT NOT NULL)", [])
+            .unwrap();
+        conn.execute(
+            "INSERT INTO tasks (data) VALUES ('{\"status\":\"pending\",\"priority\":\"T\"}')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO tasks (data) VALUES ('{\"status\":\"recurring\",\"priority\":\"T\"}')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+                "INSERT INTO tasks (data) VALUES ('{\"status\":\"completed\",\"priority\":\"L\", \"tag_in\": 1}')",
+                [],
+            )
+                .unwrap();
+        conn.execute(
+            "INSERT INTO tasks (data) VALUES ('{\"status\":\"pending\" \"tag_in\": 1}')",
+            [],
+        )
+        .unwrap();
+        conn
+    }
+
+    #[test]
+
+    fn test_count_task_t_priority() {
+        let conn = get_test_db_connection();
+
+        let count = count_task_instances(&conn, "%\"priority\":\"T\"%").unwrap();
+        assert!(count == 2); // Ensure the count is non-negative
+    }
+    #[test]
+    fn test_count_task_inbox() {
+        let conn = get_test_db_connection();
+
+        let count = count_task_instances(&conn, "%\"tag_in\"%").unwrap();
+        assert!(count == 1); // Ensure the count is non-negative
+    }
+
+    #[test]
+    fn test_write_count() {
+        let temp_file = "test_count_file";
+        write_count(5, temp_file);
+        let content = fs::read_to_string(temp_file).unwrap();
+        assert_eq!(content.trim(), "5");
+
+        write_count(0, temp_file);
+        assert!(!fs::metadata(temp_file).is_ok());
+    }
+}
