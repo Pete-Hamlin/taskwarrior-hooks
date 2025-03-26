@@ -31,7 +31,12 @@ fn main() {
 
 /* return the start of today in utc, but of your local timezone */
 fn today_in_utc() -> NaiveDateTime {
-    Local::now().naive_local().sub(Local::now().offset().fix())
+    Local::now()
+        .naive_local()
+        .date()
+        .and_hms_opt(0, 0, 0)
+        .unwrap()
+        .sub(Local::now().offset().fix())
 }
 
 fn parse_and_render(original: &str, modified: &str) -> String {
