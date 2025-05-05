@@ -59,8 +59,8 @@ fn parse_and_render(original: &str, modified: &str) -> String {
         _ => panic!("couldn't parse the scheduled_recur UDA"),
     };
 
-    let new_scheduled = today_in_utc();
-    modified_task.set_scheduled(new_scheduled.checked_add_signed(offset));
+    let new_wait = today_in_utc();
+    modified_task.set_wait(new_wait.checked_add_signed(offset));
 
     modified_task
         .status_mut()
