@@ -44,9 +44,7 @@ fn parse_and_render(original: &str, modified: &str) -> String {
     if !modified_task.uda().contains_key("scheduled_recur") {
         return String::from(modified);
     }
-    if modified_task.scheduled().is_none() {
-        return String::from(modified);
-    }
+
     if *modified_task.status() != Completed {
         return String::from(modified);
     }
